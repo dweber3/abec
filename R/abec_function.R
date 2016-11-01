@@ -10,6 +10,22 @@
 # 7. Output results as a dataframe.
 # 8. make plots?
 
+#' Area Between Exchange Curves
+#'
+#' @param proteinName       A String.
+#' @param state0Name        A String.
+#' @param state1Name        A String.
+#' @param observations      A Number or a List of numbers.
+#' @param timeList          A List of numbers. Each is the number of seconds a batch has been exposed to deuterium.
+#' @param peptidesFile      A String.
+#' @param state0DFracFile   A String.
+#' @param state1DFracFile   A String.
+#' @param state0SDFile      A String.
+#' @param state1SDFile      A String.
+#' @return
+#' @examples
+#' abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "peptides.txt", "apo.txt", "Rosi.txt",
+#' "apoSD.txt", "RosiSD.txt")
 abec <- function(proteinName, state0Name, state1Name, observations, timeList, peptidesFile, state0DFracFile, state1DFracFile, state0SDFile, state1SDFile) {
 
 # 1. Enter experimental details
