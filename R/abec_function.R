@@ -10,7 +10,7 @@
 # 7. Output results as a dataframe.
 # 8. make plots?
 
-#' Area Between Exchange Curves
+#' Area between exchange curves.
 #'
 #' @param proteinName       A String.
 #' @param state0Name        A String.
@@ -22,10 +22,18 @@
 #' @param state1DFracFile   A String.
 #' @param state0SDFile      A String.
 #' @param state1SDFile      A String.
-#' @return
+#' @return myOutput         meanX, meanY, DifMeans, Sdm, pvaluedm, Areabc, Sbc, pvaluebc 
+#'          meanX           mean remaining hydrogen fractions of state 0. 
+#'          meanY           mean remaining hydrogen fractions of state 1. 
+#'          DifMeans        Difference of the mean hydrogen remaining between the two states.
+#'          Sdm             The standard deviation of the difference of means. 
+#'          pvaluedm        The p-value of the difference of means. 
+#'          Areabc          Area between the exchange curves. 
+#'          Sbc             Standard deviation of the curve area. 
+#'          pvaluebc        The p-value of the area between the curves. 
 #' @examples
 #' abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "peptides.txt", "apo.txt", "Rosi.txt",
-#' "apoSD.txt", "RosiSD.txt")
+#'      "apoSD.txt", "RosiSD.txt")
 abec <- function(proteinName, state0Name, state1Name, observations, timeList, peptidesFile, state0DFracFile, state1DFracFile, state0SDFile, state1SDFile) {
 
 # 1. Enter experimental details
@@ -50,6 +58,7 @@ PeptideID <- myPeptides[["PeptideID"]]
 
 # outputfile
 myOutput <- myPeptides
+#TODO: replace with creating a new, blank file?
 
 # 3. Read in D% values and convert to remaining hydrogen fractions.
 myDup1 <- read.table(state0DFracFile,header=TRUE)
