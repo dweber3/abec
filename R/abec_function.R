@@ -32,8 +32,8 @@
 #'          Sbc             Standard deviation of the curve area.
 #'          pvaluebc        The p-value of the area between the curves.
 #' @examples
-#' abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "peptides.txt", "apo.txt", "Rosi.txt",
-#'      "apoSD.txt", "RosiSD.txt")
+#' abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "data/Peptides.txt",
+#'  "data/apo.txt", "data/Rosi.txt", "data/apoSD.txt", "data/RosiSD.txt")
 #' @export
 abec <- function(proteinName, state0Name, state1Name, observations, timeList, peptidesFile, state0DFracFile, state1DFracFile, state0SDFile, state1SDFile) {
 

@@ -1,0 +1,71 @@
+PeptideID	Start	End	z	Sequence																																		
+aa_212-222_+2	212	222	2	RALAKHLYDSY																																		
+aa_279-287_+2	279	287	2	IRIFQGCQF																																		
+aa_299-309_+2	299	309	2	YAKSIPGFVNL																																		
+aa_318-327_+2	318	327	2	LKYGVHEIIY																																		
+aa_318-324_+2	318	324	2	LKYGVHE																																		
+aa_331-340_+1	331	340	1	ASLMNKDGVL																																		
+aa_341-351_+2	341	351	2	ISEGQGFMTRE																																		
+aa_352-370_+3	352	370	3	FLKSLRKPFGDFMEPKFEF																																		
+aa_352-363_+3	352	363	3	FLKSLRKPFGDF																																		
+aa_364-370_+2	364	370	2	MEPKFEF																																		
+aa_371-378_+2	371	378	2	AVKFNALE																																		
+aa_371-377_+2	371	377	2	AVKFNAL																																		
+aa_390-401_+2	390	401	2	VIILSGDRPGLL																																		
+aa_391-401_+2	391	401	2	IILSGDRPGLL																																		
+aa_402-408_+1	402	408	1	NVKPIED																																		
+aa_419-431_+2	419	431	2	LQLKLNHPESSQL																																		
+aa_420-431_+2	420	431	2	QLKLNHPESSQL																																		
+aa_421-431_+2	421	431	2	LKLNHPESSQL																																		
+aa_422-431_+2	422	431	2	KLNHPESSQL																																		
+aa_432-442_+2	432	442	2	FAKLLQKMTDL																																		
+aa_432-442_+3	432	442	3	FAKLLQKMTDL																																		
+aa_443-452_+2	443	452	2	RQIVTEHVQL																																		
+aa_443-448_+2	443	448	2	RQIVTE																																		
+aa_445-452_+2	445	452	2	IVTEHVQL																																		
+aa_453-469_+3	453	469	3	LQVIKKTETDMSLHPLL																																		
+aa_453-469_+2	453	469	2	LQVIKKTETDMSLHPLL																																		
+aa_453-477_+3	453	477	3	LQVIKKTETDMSLHPLLQEIYKDLY																																		
+aa_453-477_+4	453	477	4	LQVIKKTETDMSLHPLLQEIYKDLY																																		
+aa_464-477_+2	464	477	2	SLHPLLQEIYKDLY																																		
+aa_470-477_+1	470	477	1	QEIYKDLY																																		
+aa_470-477_+2	470	477	2	QEIYKDLY																																		
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
+																																						
