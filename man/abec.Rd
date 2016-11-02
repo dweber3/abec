@@ -29,14 +29,14 @@ abec(proteinName, state0Name, state1Name, observations, timeList, peptidesFile,
 \item{state1SDFile}{A String.}
 }
 \value{
-myOutput         meanX, meanY, DifMeans, Sdm, pvaluedm, Areabc, Sbc, pvaluebc 
-         meanX           mean remaining hydrogen fractions of state 0. 
-         meanY           mean remaining hydrogen fractions of state 1. 
+myOutput         meanX, meanY, DifMeans, Sdm, pvaluedm, Areabc, Sbc, pvaluebc
+         meanX           mean remaining hydrogen fractions of state 0.
+         meanY           mean remaining hydrogen fractions of state 1.
          DifMeans        Difference of the mean hydrogen remaining between the two states.
-         Sdm             The standard deviation of the difference of means. 
-         pvaluedm        The p-value of the difference of means. 
-         Areabc          Area between the exchange curves. 
-         Sbc             Standard deviation of the curve area. 
+         Sdm             The standard deviation of the difference of means.
+         pvaluedm        The p-value of the difference of means.
+         Areabc          Area between the exchange curves.
+         Sbc             Standard deviation of the curve area.
          pvaluebc        The p-value of the area between the curves.
 }
 \description{

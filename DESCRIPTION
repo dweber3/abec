@@ -2,7 +2,7 @@ Package: abec
 Title: Area Between (Hydrogen-Deuterium) Exchange Curves
 Version: 0.1-0
 Authors@R: c(
-  person("Sharlyn", "Mazur", email = "mazurs@mail.nih.gov", role = c("aut", "cre"))
+  person("Sharlyn", "Mazur", email = "mazurs@mail.nih.gov", role = c("aut", "cre")),
   person("Daniel", "Weber", email = "pennwe@gmail.com", role = "aut")
   )
 Author: Sharlyn Mazur [aut, cre],
@@ -11,8 +11,9 @@ Maintainer: Sharlyn Mazur <mazurs@mail.nih.gov>
 Description: TODO: make a readable description.
     What the package does (one paragraph).
     subsequent lines are indented.
-Depends: R (>= 3.3.1)
+Depends: R (>= 3.3.1), stats, utils
 License: CC BY-SA 4.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1.9000
+Suggests: testthat
