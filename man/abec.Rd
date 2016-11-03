@@ -43,7 +43,7 @@ myOutput         meanX, meanY, DifMeans, Sdm, pvaluedm, Areabc, Sbc, pvaluebc
 Area between exchange curves.
 }
 \examples{
-abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "data/Peptides.txt",
+abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "Peptides.txt",
  "data/apo.txt", "data/Rosi.txt", "data/apoSD.txt", "data/RosiSD.txt")
 }
 
