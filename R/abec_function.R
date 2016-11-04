@@ -22,10 +22,10 @@
 #' @param state1DFracFile   A String.
 #' @param state0SDFile      A String.
 #' @param state1SDFile      A String.
-#' @return myOutput         meanX, meanY, DifMeans, Sdm, pvaluedm, Areabc, Sbc, pvaluebc
-#'          meanX           mean remaining hydrogen fractions of state 0.
-#'          meanY           mean remaining hydrogen fractions of state 1.
-#'          DifMeans        Difference of the mean hydrogen remaining between the two states.
+#' @return result         state0mean, state1mean, mean_difs, Sdm, pvaluedm, Areabc, Sbc, pvaluebc
+#'          state0mean           mean remaining hydrogen fractions of state 0.
+#'          state1mean           mean remaining hydrogen fractions of state 1.
+#'          mean_difs        Difference of the mean hydrogen remaining between the two states.
 #'          Sdm             The standard deviation of the difference of means.
 #'          pvaluedm        The p-value of the difference of means.
 #'          Areabc          Area between the exchange curves.
@@ -36,93 +36,91 @@
 #'  "data/apo.txt", "data/Rosi.txt", "data/apoSD.txt", "data/RosiSD.txt")
 #' @export
 abec <- function(protein_name, peptides_file,
-                 repetitions, time_list,
+                 repetitions, times_list,
                  state0name, state1name,
                  state0dfracfile, state1dfracfile,
                  state0sdfile, state1sdfile) {
+times_length <- length(times_list)
 
 # 2. Read in Peptide info
-myPeptides <- utils::read.table(peptides_file, header = TRUE)
-mynrow <- nrow(myPeptides)
-PeptideID <- myPeptides[["PeptideID"]]
+peptides_table <- utils::read.table(peptides_file, header = TRUE)
+num_peptides <- nrow(peptides_table)
 
 # outputfile
-myOutput <- myPeptides
-#TODO: replace with creating a new, blank file?
+result <- peptides_table
 
 # 3. Read in D% values and convert to remaining hydrogen fractions.
-myDup1 <- utils::read.table(state0dfracfile, header = TRUE)
-myDup2 <- utils::read.table(state1dfracfile, header = TRUE)
-
 # Setting up dataframes for remaining hydrogen fractions in State X and State Y
 # Probably it would be better just to have these as matrices
-myX <- myDup1
-myY <- myDup2
-# TODO: Need to set up automated generation of headings for myX and myY DFs
-colnames(myX) <- c("PeptideID", "apo_1s", "apo_30s", "apo_60s", "apo_900s", "apo_3600s")
-myY <- myX
-colnames(myY) <- c("PeptideID", "Rosi_1s", "Rosi_30s", "Rosi_60s", "Rosi_900s", "Rosi_3600s")
-myX[, 2:6] <- 1-.01 * myDup1[, 2:6]
-myY[, 2:6] <- 1-.01 * myDup2[, 2:6] # Calculating remaining hydrogen fractions
+state0dfrac <- utils::read.table(state0dfracfile, header = TRUE)
+state1dfrac <- utils::read.table(state1dfracfile, header = TRUE)
+
+# TODO: Need to set up automated generation of headings for state0dfrac and state1dfrac DFs
+colnames(state0dfrac) <- c("PeptideID", "apo_1s", "apo_30s", "apo_60s", "apo_900s", "apo_3600s")
+colnames(state1dfrac) <- c("PeptideID", "Rosi_1s", "Rosi_30s", "Rosi_60s", "Rosi_900s", "Rosi_3600s")
+# Calculating remaining hydrogen fractions
+state0dfrac[, 2:6] <- 1 - .01 * state0dfrac[, 2:6]
+state1dfrac[, 2:6] <- 1 - .01 * state1dfrac[, 2:6]
 
 # 4. Read in SDs and convert to hydrogen fraction SDs.
-myD_SD1 <- utils::read.table(state0sdfile, header = TRUE)
-myD_SD2 <- utils::read.table(state1sdfile, header = TRUE)
-mySx <- myD_SD1
-mySy <- myD_SD2 #Creating DFs for Std. deviations as hydrogen fractions
+#Creating DFs for Std. deviations as hydrogen fractions
 # Probably it would be better just to have these as matrices
-mySx[, 2:6] <- .01 * mySx[, 2:6]
-mySy[, 2:6] <- .01 * mySy[, 2:6]
-colnames(mySx) <- c("PeptideID", "Sx_1s", "Sx_30s", "Sx_60s", "Sx_900s", "Sx_3600s")
-colnames(mySy) <- c("PeptideID", "Sy_1s", "Sy_30s", "Sy_60s", "Sy_900s", "Sy_3600s")
+state0sd <- utils::read.table(state0sdfile, header = TRUE)
+state1sd <- utils::read.table(state1sdfile, header = TRUE)
+state0sd[, 2:6] <- .01 * state0sd[, 2:6]
+state1sd[, 2:6] <- .01 * state1sd[, 2:6]
+colnames(state0sd) <- c("PeptideID", "Sx_1s", "Sx_30s", "Sx_60s", "Sx_900s", "Sx_3600s")
+colnames(state1sd) <- c("PeptideID", "Sy_1s", "Sy_30s", "Sy_60s", "Sy_900s", "Sy_3600s")
 
 # 5. Calculate the means, difference of the means (Y-X), the pooled std.dev.(Sdm), and p values
-myXdata <- as.matrix(myX[, 2:(length(time_list) + 1)])
-myYdata <- as.matrix(myY[, 2:(length(time_list) + 1)])
-myOutput$meanX <- rowMeans(myXdata)
-myOutput$meanY <- rowMeans(myYdata)
-myOutput$DifMeans <- myOutput$meanY-myOutput$meanX # Difference of means
+state0dfracdata <- as.matrix(state0dfrac[, 2:(times_length + 1)])
+state1dfracdata <- as.matrix(state1dfrac[, 2:(times_length + 1)])
+result$state0mean <- rowMeans(state0dfracdata)
+result$state1mean <- rowMeans(state1dfracdata)
+result$mean_difs <- result$state1mean - result$state0mean # Difference of means
 
 # values currently are standard deviations.
 # Square to get variances.
-myXvar <- as.matrix(mySx[, 2:(length(time_list) + 1)])
-myYvar <- as.matrix(mySy[, 2:(length(time_list) + 1)])
-myXvar <- myXvar^2
-myYvar <- myYvar^2
+state0dfracvar <- as.matrix(state0sd[, 2:(times_length + 1)])
+state1dfracvar <- as.matrix(state1sd[, 2:(times_length + 1)])
+state0dfracvar <- state0dfracvar ^ 2
+state1dfracvar <- state1dfracvar ^ 2
 
-colnames(myXvar) <- c("Varx_1s", "Varx_30s", "Varx_60s", "Varx_900s", "Varx_3600s")
-colnames(myYvar) <- c("Vary_1s", "Vary_30s", "Vary_60s", "Vary_900s", "Vary_3600s")
-myOutput$Sdm <- sqrt(0.5 * (rowMeans(myXvar) + rowMeans(myYvar)))
+colnames(state0dfracvar) <- c("Varx_1s", "Varx_30s", "Varx_60s", "Varx_900s", "Varx_3600s")
+colnames(state1dfracvar) <- c("Vary_1s", "Vary_30s", "Vary_60s", "Vary_900s", "Vary_3600s")
+result$Sdm <- sqrt(0.5 * (rowMeans(state0dfracvar) + rowMeans(state1dfracvar)))
 
 # Calculate p values for difference of means
-myOutput$pvaluedm <- 2 * stats::pt(abs(repetitions * myOutput$DifMeans/(2 * myOutput$Sdm)), 2 * repetitions-2, lower.tail = FALSE, log.p = FALSE)
+result$pvaluedm <- 2 * stats::pt(abs(repetitions * result$mean_difs / (2 * result$Sdm)), 2 * repetitions - 2, lower.tail = FALSE, log.p = FALSE)
 
 # 6. Calculate the area (Abc), the standard deviation (Sbc), and p values
 # set up a matrix of weights derived from log time ratios. First a vector.
-logtimeweights <- rep(0.0, length(time_list))
-logtimeweights[1] <- log(time_list[2]/time_list[1], 10)
-for (i in 2:(length(time_list)-1)) {
-  logtimeweights[i] <- log(time_list[i + 1]/time_list[i-1], 10)
+logtimeweights <- rep(0.0, times_length)
+logtimeweights[1] <- log(times_list[2] / times_list[1], 10)
+for (i in 2:(times_length - 1)) {
+  logtimeweights[i] <- log(times_list[i + 1] / times_list[i - 1], 10)
 }
-logtimeweights[length(time_list)] <- log(time_list[length(time_list)]/time_list[length(time_list)-1], 10)
+logtimeweights[times_length] <- log(times_list[times_length] / times_list[times_length - 1], 10)
 
 # Now the matrix
-myweights <- rep(logtimeweights, each = mynrow)
-dim(myweights) <- c(mynrow, length(time_list))
+myweights <- rep(logtimeweights, each = num_peptides)
+dim(myweights) <- c(num_peptides, times_length)
 
 # Matrices with weighted differences at each timepoint, or weighted standard deviations
-mywtdiffs <- (myYdata-myXdata) * myweights
+mywtdiffs <- (state1dfracdata - state0dfracdata) * myweights
 
 colnames(mywtdiffs) <- c("wtdif_1s", "wtdif_30s", "wtdif_60s", "wtdif_900s", "wtdif_3600s")
-mywtvars <- (myYvar + myXvar) * myweights
+mywtvars <- (state1dfracvar + state0dfracvar) * myweights
 
 colnames(mywtvars) <- c("wtvar_1s", "wtvar_30s", "wtvar_60s", "wtvar_900s", "wtvar_3600s")
 
 # Calculate Areabc and standard deviations from row sums
-Areabc <- rep(0.0, mynrow)
-Sbc2 <- rep(0.0, mynrow)
-myOutput$Areabc <- 0.5 * rowSums(mywtdiffs) # Area between curves
-myOutput$Sbc <- sqrt(0.5 * rowSums(mywtvars)) # Calculated SD of Area between curves
-myOutput$pvaluebc <- 2 * stats::pt(abs(repetitions * myOutput$Areabc/(2 * myOutput$Sbc)), 2 * repetitions-2, lower.tail = FALSE, log.p = FALSE)
-myOutput
+# Area between curves
+result$Areabc <- 0.5 * rowSums(mywtdiffs)
+# Calculated SD of Area between curves
+result$Sbc <- sqrt(0.5 * rowSums(mywtvars))
+result$pvaluebc <- 2 * stats::pt(abs(repetitions * result$Areabc / (2 * result$Sbc)), 2 * repetitions - 2, lower.tail = FALSE, log.p = FALSE)
+result
 }
+
+#TODO: column_names(prefix, times_list)
