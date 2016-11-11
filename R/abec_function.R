@@ -32,7 +32,7 @@
 #'          Sbc             Standard deviation of the curve area.
 #'          pvaluebc        The p-value of the area between the curves.
 #' @examples
-#' abec("PPARg", "apo", "Rosi", 4, c(1, 30, 60, 900, 3600), "Peptides.txt",
+#' abec("PPARg", "data/Peptides.txt", 4, c(1, 30, 60, 900, 3600), "apo", "Rosi",
 #'  "data/apo.txt", "data/Rosi.txt", "data/apoSD.txt", "data/RosiSD.txt")
 #' @export
 abec <- function(protein_name, peptides_file,
@@ -55,9 +55,6 @@ result <- peptides_table
 state0dfrac <- utils::read.table(state0dfracfile, header = TRUE)
 state1dfrac <- utils::read.table(state1dfracfile, header = TRUE)
 
-# TODO: Need to set up automated generation of headings for state0dfrac and state1dfrac DFs
-colnames(state0dfrac) <- c("PeptideID", "apo_1s", "apo_30s", "apo_60s", "apo_900s", "apo_3600s")
-colnames(state1dfrac) <- c("PeptideID", "Rosi_1s", "Rosi_30s", "Rosi_60s", "Rosi_900s", "Rosi_3600s")
 # Calculating remaining hydrogen fractions
 state0dfrac[, 2:6] <- 1 - .01 * state0dfrac[, 2:6]
 state1dfrac[, 2:6] <- 1 - .01 * state1dfrac[, 2:6]
@@ -69,8 +66,6 @@ state0sd <- utils::read.table(state0sdfile, header = TRUE)
 state1sd <- utils::read.table(state1sdfile, header = TRUE)
 state0sd[, 2:6] <- .01 * state0sd[, 2:6]
 state1sd[, 2:6] <- .01 * state1sd[, 2:6]
-colnames(state0sd) <- c("PeptideID", "Sx_1s", "Sx_30s", "Sx_60s", "Sx_900s", "Sx_3600s")
-colnames(state1sd) <- c("PeptideID", "Sy_1s", "Sy_30s", "Sy_60s", "Sy_900s", "Sy_3600s")
 
 # 5. Calculate the means, difference of the means (Y-X), the pooled std.dev.(Sdm), and p values
 state0dfracdata <- as.matrix(state0dfrac[, 2:(times_length + 1)])
@@ -85,9 +80,6 @@ state0dfracvar <- as.matrix(state0sd[, 2:(times_length + 1)])
 state1dfracvar <- as.matrix(state1sd[, 2:(times_length + 1)])
 state0dfracvar <- state0dfracvar ^ 2
 state1dfracvar <- state1dfracvar ^ 2
-
-colnames(state0dfracvar) <- c("Varx_1s", "Varx_30s", "Varx_60s", "Varx_900s", "Varx_3600s")
-colnames(state1dfracvar) <- c("Vary_1s", "Vary_30s", "Vary_60s", "Vary_900s", "Vary_3600s")
 result$Sdm <- sqrt(0.5 * (rowMeans(state0dfracvar) + rowMeans(state1dfracvar)))
 
 # Calculate p values for difference of means
@@ -108,11 +100,8 @@ dim(myweights) <- c(num_peptides, times_length)
 
 # Matrices with weighted differences at each timepoint, or weighted standard deviations
 mywtdiffs <- (state1dfracdata - state0dfracdata) * myweights
-
-colnames(mywtdiffs) <- c("wtdif_1s", "wtdif_30s", "wtdif_60s", "wtdif_900s", "wtdif_3600s")
 mywtvars <- (state1dfracvar + state0dfracvar) * myweights
 
-colnames(mywtvars) <- c("wtvar_1s", "wtvar_30s", "wtvar_60s", "wtvar_900s", "wtvar_3600s")
 
 # Calculate Areabc and standard deviations from row sums
 # Area between curves
@@ -123,4 +112,8 @@ result$pvaluebc <- 2 * stats::pt(abs(repetitions * result$Areabc / (2 * result$S
 result
 }
 
-#TODO: column_names(prefix, times_list)
+# Generate a list of the form prefix_times (e.g. wtdif_1s, wtdif_30s...)
+generate_time_names <- function(prefix, times_list) {
+  result_list <- paste(prefix, "_", times_list, "s", sep = "")
+  result_list
+}
